@@ -58,10 +58,8 @@ export default function Index({ auth, projects }: ProjectsPageProps) {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Name</TableHead>
-                                        <TableHead>URL</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead>Start Date</TableHead>
-                                        <TableHead>End Date</TableHead>
                                         <TableHead>Owner</TableHead>
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
@@ -78,16 +76,6 @@ export default function Index({ auth, projects }: ProjectsPageProps) {
                                                 </Link>
                                             </TableCell>
                                             <TableCell>
-                                                <a
-                                                    href={project.url}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                                                >
-                                                    {project.url}
-                                                </a>
-                                            </TableCell>
-                                            <TableCell>
                                                 <span className={`px-2 py-1 rounded-full text-xs ${
                                                     {
                                                         'not started': 'bg-gray-200 text-gray-800',
@@ -102,11 +90,6 @@ export default function Index({ auth, projects }: ProjectsPageProps) {
                                             <TableCell>
                                                 {project.start_date
                                                     ? format(new Date(project.start_date), 'MMM d, yyyy')
-                                                    : '-'}
-                                            </TableCell>
-                                            <TableCell>
-                                                {project.end_date
-                                                    ? format(new Date(project.end_date), 'MMM d, yyyy')
                                                     : '-'}
                                             </TableCell>
                                             <TableCell>{project.owner.name}</TableCell>
