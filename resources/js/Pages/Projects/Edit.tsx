@@ -1,7 +1,7 @@
 import { Head, useForm } from '@inertiajs/react';
 import { FormEventHandler } from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { PageProps, Project } from '@/types';
+import { PageProps, Project, User } from '@/types';
 import { Button } from '@/Components/ui/button';
 import { Input } from '@/Components/ui/input';
 import { Label } from '@/Components/ui/label';
@@ -16,13 +16,15 @@ import {
 
 interface EditProps extends PageProps {
     project: Project;
+    customers: User[];
 }
 
-export default function Edit({ auth, project }: EditProps) {
+export default function Edit({ auth, project, customers }: EditProps) {
     const { data, setData, put, processing, errors } = useForm({
         name: project.name,
         description: project.description || '',
         url: project.url,
+        owner_id: project.owner_id.toString(),
         start_date: project.start_date || '',
         end_date: project.end_date || '',
         status: project.status,
@@ -89,6 +91,31 @@ export default function Edit({ auth, project }: EditProps) {
                                     />
                                     {errors.url && (
                                         <p className="text-red-500 text-sm mt-1">{errors.url}</p>
+                                    )}
+                                </div>
+
+                                <div>
+                                    <Label htmlFor="owner">Project Owner</Label>
+                                    <Select
+                                        value={data.owner_id}
+                                        onValueChange={(value) => setData('owner_id', value)}
+                                    >
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Select owner" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {customers.map((customer) => (
+                                                <SelectItem
+                                                    key={customer.id}
+                                                    value={customer.id.toString()}
+                                                >
+                                                    {customer.name} ({customer.email})
+                                                </SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                    {errors.owner_id && (
+                                        <p className="text-red-500 text-sm mt-1">{errors.owner_id}</p>
                                     )}
                                 </div>
 

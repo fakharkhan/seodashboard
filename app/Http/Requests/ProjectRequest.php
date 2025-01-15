@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\User;
 
 class ProjectRequest extends FormRequest
 {
@@ -11,6 +12,13 @@ class ProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
+        if ($this->owner_id) {
+            // Check if the selected owner is a customer
+            return User::where('id', $this->owner_id)
+                ->whereHas('roles', function ($query) {
+                    $query->where('slug', 'customer');
+                })->exists();
+        }
         return true;
     }
 
@@ -25,6 +33,7 @@ class ProjectRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'url' => ['required', 'url', 'max:255'],
+            'owner_id' => ['required', 'exists:users,id'],
             'start_date' => ['nullable', 'date'],
             'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
             'status' => ['required', 'in:not started,in progress,completed,on hold'],

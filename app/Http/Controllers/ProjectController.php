@@ -34,7 +34,13 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Projects/Create');
+        $customers = User::whereHas('roles', function ($query) {
+            $query->where('slug', 'customer');
+        })->get(['id', 'name', 'email']);
+
+        return Inertia::render('Projects/Create', [
+            'customers' => $customers
+        ]);
     }
 
     /**
@@ -42,13 +48,10 @@ class ProjectController extends Controller
      */
     public function store(ProjectRequest $request)
     {
-        $project = Project::create([
-            'owner_id' => auth()->id(),
-            ...$request->validated()
-        ]);
+        $project = Project::create($request->validated());
 
         // Add the owner as an admin in the pivot table
-        $project->users()->attach(auth()->id(), ['role' => 'admin']);
+        $project->users()->attach($request->owner_id, ['role' => 'admin']);
 
         return redirect()->route('projects.index')
             ->with('success', 'Project created successfully.');
@@ -78,8 +81,13 @@ class ProjectController extends Controller
     {
         $project->load(['owner', 'users']);
         
+        $customers = User::whereHas('roles', function ($query) {
+            $query->where('slug', 'customer');
+        })->get(['id', 'name', 'email']);
+
         return Inertia::render('Projects/Edit', [
-            'project' => $project
+            'project' => $project,
+            'customers' => $customers
         ]);
     }
 
