@@ -19,6 +19,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/Components/ui/select';
+import { Label } from '@/Components/ui/label';
 
 interface ShowProps extends PageProps {
     project: Project;
@@ -28,7 +29,6 @@ interface ShowProps extends PageProps {
 export default function Show({ auth, project, availableUsers }: ShowProps) {
     const { data, setData, post, processing, errors, reset } = useForm({
         user_id: '',
-        role: 'provider',
     });
 
     const submit: FormEventHandler = (e) => {
@@ -132,13 +132,12 @@ export default function Show({ auth, project, availableUsers }: ShowProps) {
                     {/* Project Users */}
                     <div className="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6">
-                            <h3 className="text-lg font-medium mb-4">Project Users</h3>
+                            <h3 className="text-lg font-medium mb-4">Project Providers</h3>
                             <Table>
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Name</TableHead>
                                         <TableHead>Email</TableHead>
-                                        <TableHead>Role</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -146,75 +145,47 @@ export default function Show({ auth, project, availableUsers }: ShowProps) {
                                         <TableRow key={user.id}>
                                             <TableCell>{user.name}</TableCell>
                                             <TableCell>{user.email}</TableCell>
-                                            <TableCell>
-                                                <span className={`px-2 py-1 rounded-full text-xs ${
-                                                    {
-                                                        'admin': 'bg-purple-200 text-purple-800',
-                                                        'provider': 'bg-blue-200 text-blue-800',
-                                                        'customer': 'bg-green-200 text-green-800',
-                                                    }[user.pivot.role]
-                                                }`}>
-                                                    {user.pivot.role}
-                                                </span>
-                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
                             </Table>
 
-                            {/* Add User Form */}
-                            <form onSubmit={submit} className="mt-6 space-y-4">
-                                <div className="grid grid-cols-2 gap-4">
-                                    <div>
-                                        <Select
-                                            value={data.user_id}
-                                            onValueChange={(value) => setData('user_id', value)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select user" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                {availableUsers.map((user) => (
-                                                    <SelectItem
-                                                        key={user.id}
-                                                        value={user.id.toString()}
-                                                    >
-                                                        {user.name}
-                                                    </SelectItem>
-                                                ))}
-                                            </SelectContent>
-                                        </Select>
-                                        {errors.user_id && (
-                                            <p className="text-red-500 text-sm mt-1">
-                                                {errors.user_id}
-                                            </p>
-                                        )}
+                            {/* Add Provider Form */}
+                            {availableUsers.length > 0 && (
+                                <form onSubmit={submit} className="mt-6">
+                                    <div className="flex gap-4 items-end">
+                                        <div className="flex-1">
+                                            <Label htmlFor="provider">Add Provider</Label>
+                                            <Select
+                                                value={data.user_id}
+                                                onValueChange={(value) => setData('user_id', value)}
+                                            >
+                                                <SelectTrigger>
+                                                    <SelectValue placeholder="Select provider" />
+                                                </SelectTrigger>
+                                                <SelectContent>
+                                                    {availableUsers.map((user) => (
+                                                        <SelectItem
+                                                            key={user.id}
+                                                            value={user.id.toString()}
+                                                        >
+                                                            {user.name} ({user.email})
+                                                        </SelectItem>
+                                                    ))}
+                                                </SelectContent>
+                                            </Select>
+                                            {errors.user_id && (
+                                                <p className="text-red-500 text-sm mt-1">
+                                                    {errors.user_id}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <Button type="submit" disabled={processing}>
+                                            Add Provider
+                                        </Button>
                                     </div>
-                                    <div>
-                                        <Select
-                                            value={data.role}
-                                            onValueChange={(value) => setData('role', value)}
-                                        >
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select role" />
-                                            </SelectTrigger>
-                                            <SelectContent>
-                                                <SelectItem value="admin">Admin</SelectItem>
-                                                <SelectItem value="provider">Provider</SelectItem>
-                                                <SelectItem value="customer">Customer</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {errors.role && (
-                                            <p className="text-red-500 text-sm mt-1">{errors.role}</p>
-                                        )}
-                                    </div>
-                                </div>
-                                <div className="flex justify-end">
-                                    <Button type="submit" disabled={processing}>
-                                        Add User
-                                    </Button>
-                                </div>
-                            </form>
+                                </form>
+                            )}
                         </div>
                     </div>
                 </div>

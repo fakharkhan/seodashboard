@@ -116,18 +116,18 @@ class ProjectController extends Controller
     public function assignUsers(Request $request, Project $project)
     {
         $request->validate([
-            'users' => ['required', 'array'],
-            'users.*.id' => ['required', 'exists:users,id'],
-            'users.*.role' => ['required', 'in:admin,provider,customer'],
+            'user_id' => ['required', 'exists:users,id'],
         ]);
 
-        // Sync users with their roles
-        $syncData = collect($request->users)->mapWithKeys(function ($user) {
-            return [$user['id'] => ['role' => $user['role']]];
-        })->toArray();
+        // Verify the user is a provider
+        $user = User::findOrFail($request->user_id);
+        if (!$user->isProvider()) {
+            return back()->with('error', 'Selected user must be a provider.');
+        }
 
-        $project->users()->sync($syncData);
+        // Attach the user with provider role
+        $project->users()->attach($request->user_id, ['role' => 'provider']);
 
-        return back()->with('success', 'Users assigned successfully.');
+        return back()->with('success', 'Provider assigned successfully.');
     }
 }
