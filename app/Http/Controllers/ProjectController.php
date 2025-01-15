@@ -50,9 +50,6 @@ class ProjectController extends Controller
     {
         $project = Project::create($request->validated());
 
-        // Add the owner as an admin in the pivot table
-        $project->users()->attach($request->owner_id, ['role' => 'admin']);
-
         return redirect()->route('projects.index')
             ->with('success', 'Project created successfully.');
     }
@@ -66,6 +63,9 @@ class ProjectController extends Controller
         
         // Get users not already in the project
         $availableUsers = User::whereNotIn('id', $project->users->pluck('id'))
+            ->whereHas('roles', function ($query) {
+                $query->where('slug', 'provider');
+            })
             ->get(['id', 'name', 'email']);
         
         return Inertia::render('Projects/Show', [
@@ -79,7 +79,7 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
-        $project->load(['owner', 'users']);
+        $project->load(['owner']);
         
         $customers = User::whereHas('roles', function ($query) {
             $query->where('slug', 'customer');
