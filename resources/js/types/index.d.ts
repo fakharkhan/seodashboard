@@ -7,6 +7,17 @@ export interface User {
     email_verified_at: string;
 }
 
+export interface Task {
+    id: number;
+    project_id: number;
+    assigned_to: number;
+    description: string;
+    status: 'pending' | 'in progress' | 'completed';
+    due_date: string | null;
+    completion_date: string | null;
+    assignedUser: User;
+}
+
 export interface Project {
     id: number;
     name: string;
@@ -27,6 +38,7 @@ export interface Project {
             role: 'admin' | 'provider' | 'customer';
         };
     }[];
+    tasks: Task[];
 }
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {

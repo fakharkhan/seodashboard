@@ -59,18 +59,17 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load(['owner', 'users']);
-        
-        // Get users not already in the project
+        $project->load(['owner', 'users', 'tasks.assignedUser']);
+
         $availableUsers = User::whereNotIn('id', $project->users->pluck('id'))
             ->whereHas('roles', function ($query) {
                 $query->where('slug', 'provider');
             })
             ->get(['id', 'name', 'email']);
-        
+
         return Inertia::render('Projects/Show', [
             'project' => $project,
-            'availableUsers' => $availableUsers
+            'availableUsers' => $availableUsers,
         ]);
     }
 

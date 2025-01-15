@@ -24,6 +24,8 @@ class Project extends Model
         'end_date' => 'date'
     ];
 
+    protected $with = ['tasks.assignedUser'];
+
     /**
      * Get the user that owns the project.
      */
@@ -40,5 +42,13 @@ class Project extends Model
         return $this->belongsToMany(User::class)
             ->withPivot('role')
             ->withTimestamps();
+    }
+
+    /**
+     * Get the tasks for the project.
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
     }
 }
