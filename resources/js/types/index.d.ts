@@ -16,6 +16,7 @@ export interface Task {
     due_date: string | null;
     completion_date: string | null;
     assignedUser: User;
+    project?: Project;
 }
 
 export interface Project {

@@ -60,6 +60,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('projects/{project}/tasks', [TaskController::class, 'store'])->name('projects.tasks.store');
     Route::put('projects/{project}/tasks/{task}', [TaskController::class, 'update'])->name('projects.tasks.update');
     Route::delete('projects/{project}/tasks/{task}', [TaskController::class, 'destroy'])->name('projects.tasks.destroy');
+    Route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
 
     Route::resource('users', UserController::class);
     Route::resource('roles', RoleController::class);

@@ -51,6 +51,12 @@ export default function Authenticated({
                                 >
                                     Projects
                                 </NavLink>
+                                <NavLink
+                                    href={route('tasks.index')}
+                                    active={route().current('tasks.*')}
+                                >
+                                    Tasks
+                                </NavLink>
                             </div>
                         </div>
 
@@ -172,6 +178,12 @@ export default function Authenticated({
                             active={route().current('projects.*')}
                         >
                             Projects
+                        </ResponsiveNavLink>
+                        <ResponsiveNavLink
+                            href={route('tasks.index')}
+                            active={route().current('tasks.*')}
+                        >
+                            Tasks
                         </ResponsiveNavLink>
                     </div>
 
