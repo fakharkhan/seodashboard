@@ -13,6 +13,8 @@ import {
     TableRow,
 } from '@/Components/ui/table';
 import { format } from 'date-fns';
+import { Avatar } from '@/Components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/Components/ui/tooltip';
 
 interface ProjectsPageProps extends PageProps {
     projects: {
@@ -61,6 +63,7 @@ export default function Index({ auth, projects }: ProjectsPageProps) {
                                         <TableHead>Status</TableHead>
                                         <TableHead>Start Date</TableHead>
                                         <TableHead>Owner</TableHead>
+                                        <TableHead>Providers</TableHead>
                                         <TableHead>Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
@@ -93,6 +96,28 @@ export default function Index({ auth, projects }: ProjectsPageProps) {
                                                     : '-'}
                                             </TableCell>
                                             <TableCell>{project.owner.name}</TableCell>
+                                            <TableCell>
+                                                <div className="flex -space-x-2">
+                                                    {project.users
+                                                        .filter(user => user.pivot.role === 'provider')
+                                                        .map((provider) => (
+                                                            <TooltipProvider key={provider.id}>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger>
+                                                                        <Avatar
+                                                                            name={provider.name}
+                                                                            size="sm"
+                                                                            className="border-2 border-white dark:border-gray-800"
+                                                                        />
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent>
+                                                                        <p>{provider.name}</p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            </TooltipProvider>
+                                                        ))}
+                                                </div>
+                                            </TableCell>
                                             <TableCell>
                                                 <div className="flex space-x-2">
                                                     <Link
