@@ -9,6 +9,10 @@ class Task extends Model
 {
     use HasFactory;
 
+    protected $appends = ['assignedUser'];
+    
+
+
     protected $fillable = [
         'project_id',
         'assigned_to',
@@ -37,5 +41,10 @@ class Task extends Model
     public function assignedUser()
     {
         return $this->belongsTo(User::class, 'assigned_to');
+    }
+
+    public function getAssignedUserAttribute()
+    {
+        return $this->assignedUser()->first();
     }
 }

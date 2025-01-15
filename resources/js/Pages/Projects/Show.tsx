@@ -214,7 +214,7 @@ export default function Show({ auth, project, availableUsers }: ShowProps) {
                                 <TableHeader>
                                     <TableRow>
                                         <TableHead>Description</TableHead>
-                                        <TableHead>Assigned To</TableHead>
+                                        <TableHead>Provider</TableHead>
                                         <TableHead>Status</TableHead>
                                         <TableHead>Due Date</TableHead>
                                         <TableHead>Completion Date</TableHead>

@@ -59,8 +59,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        $project->load(['owner', 'users', 'tasks.assignedUser']);
 
+        $project->load(['owner', 'users', 'tasks']);
+       
         $availableUsers = User::whereNotIn('id', $project->users->pluck('id'))
             ->whereHas('roles', function ($query) {
                 $query->where('slug', 'provider');
