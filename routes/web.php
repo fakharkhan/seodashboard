@@ -24,4 +24,23 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/admin/dashboard', function () {
+        return Inertia::render('Admin/Dashboard');
+    })->name('admin.dashboard');
+});
+
+Route::middleware(['auth', 'role:provider'])->group(function () {
+    Route::get('/provider/dashboard', function () {
+        return Inertia::render('Provider/Dashboard');
+    })->name('provider.dashboard');
+});
+
+Route::middleware(['auth'])->group(function () {
+    // Customer routes - default for authenticated users
+    Route::get('/customer/dashboard', function () {
+        return Inertia::render('Customer/Dashboard');
+    })->name('customer.dashboard');
+});
+
 require __DIR__.'/auth.php';
