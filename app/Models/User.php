@@ -71,4 +71,26 @@ class User extends Authenticatable
     {
         return $this->hasRole('customer');
     }
+
+    protected $appends = [
+        'profile_photo_url',
+    ];
+
+    /**
+     * Get the projects owned by the user.
+     */
+    public function ownedProjects()
+    {
+        return $this->hasMany(Project::class, 'owner_id');
+    }
+
+    /**
+     * Get the projects that the user is associated with.
+     */
+    public function projects()
+    {
+        return $this->belongsToMany(Project::class)
+            ->withPivot('role')
+            ->withTimestamps();
+    }
 }
