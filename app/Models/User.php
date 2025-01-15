@@ -72,9 +72,7 @@ class User extends Authenticatable
         return $this->hasRole('customer');
     }
 
-    protected $appends = [
-        'profile_photo_url',
-    ];
+
 
     /**
      * Get the projects owned by the user.
